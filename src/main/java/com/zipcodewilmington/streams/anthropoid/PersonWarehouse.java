@@ -36,7 +36,8 @@ public final class PersonWarehouse implements Iterable<Person> {
      * @return list of names of Person objects
      */ // TODO
     public List<String> getNames() {
-        return null;
+        List<String>names=people.stream().map(Person::getName).collect(Collectors.toList());
+        return names;
     }
 
 
@@ -44,7 +45,17 @@ public final class PersonWarehouse implements Iterable<Person> {
      * @return list of uniquely named Person objects
      */ //TODO
     public Stream<Person> getUniquelyNamedPeople() {
-        return null;
+        List<String> newList = getNames().stream().distinct().collect(Collectors.toList());
+        List<Person> uniqueNames = new ArrayList<>();
+
+        people.stream().forEach(person -> {
+                    if(newList.contains(person.getName())){
+                        uniqueNames.add(person);
+                        newList.remove(person.getName());
+                    }
+                });
+        Stream<Person> result = uniqueNames.stream();
+        return result;
     }
 
 
@@ -53,7 +64,8 @@ public final class PersonWarehouse implements Iterable<Person> {
      * @return a Stream of respective
      */ //TODO
     public Stream<Person> getUniquelyNamedPeopleStartingWith(Character character) {
-        return null;
+        Stream<Person> result = getUniquelyNamedPeople().filter(person -> person.getName().charAt(0) == character);
+        return result;
     }
 
     /**
@@ -61,14 +73,16 @@ public final class PersonWarehouse implements Iterable<Person> {
      * @return a Stream of respective
      */ //TODO
     public Stream<Person> getFirstNUniquelyNamedPeople(int n) {
-        return null;
+        Stream<Person> result = getUniquelyNamedPeople().limit(n);
+        return result;
     }
 
     /**
      * @return a mapping of Person Id to the respective Person name
      */ // TODO
     public Map<Long, String> getIdToNameMap() {
-        return null;
+        Map<Long, String> result = people.stream().collect(Collectors.toMap(Person::getPersonalId, Person::getName));
+        return result;
     }
 
 
